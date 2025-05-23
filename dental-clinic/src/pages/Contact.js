@@ -40,50 +40,37 @@ function Contact() {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    setErrors(validationErrors);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validate();
+  setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length === 0) {
-     
+  if (Object.keys(validationErrors).length === 0) {
+    try {
+      await axios.post('https://jsonplaceholder.typicode.com/posts', form);
+
       Swal.fire({
-        title: 'Sending...',
-        text: 'Please wait while we save your message.',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
+        icon: 'success',
+        title: 'Message Sent!',
+        text: 'Thank you for contacting us. We will get back to you soon.',
+        timer: 2500,
+        timerProgressBar: true,
+        showConfirmButton: false
       });
 
-      try {
-       
-        await axios.post('https://jsonplaceholder.typicode.com/posts', form);
-
-       
-        Swal.fire({
-          icon: 'success',
-          title: 'Message Sent!',
-          text: 'Thank you for contacting us. We will get back to you soon.',
-          timer: 2500,
-          timerProgressBar: true,
-          showConfirmButton: false
-        });
-
-        setForm({ name: '', email: '', subject: '', message: '' });
-      } catch (error) {
-        
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops!',
-          text: 'Something went wrong. Please try again later.',
-          timer: 2500,
-          timerProgressBar: true,
-          showConfirmButton: false
-        });
-      }
+      setForm({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Something went wrong. Please try again later.',
+        timer: 2500,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
     }
-  };
+  }
+};
 
   return (
     <div>
